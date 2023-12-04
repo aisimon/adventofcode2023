@@ -23,7 +23,7 @@ for ($i=0; $i<count($lines); $i++) {
     if (count($found_stack) == 1) {
         $value = $found_stack[0];
     } else if (count($found_stack) > 1) {
-        $value = $found_stack[0] + $found_stack[count($found_stack)-1];
+        $value = $found_stack[0] . $found_stack[count($found_stack)-1];
     }
 
     $answer += $value;
@@ -37,7 +37,7 @@ function parser(int $a, int $b, string &$line) {
     $check = substr($line, $a, $b);
     
     if (is_numeric(substr($check, -1))) { // check last char for numeric value
-        return (int) substr($check, -1);
+        return substr($check, -1);
     } 
     if (strlen($check) < 3) { // cannot possible match a English number words
         return false;
