@@ -21,13 +21,15 @@ for ($i=0; $i<count($lines); $i++) {
     }
 
     if (count($found_stack) == 1) {
-        $value = $found_stack[0];
+        $value = $found_stack[0] . $found_stack[0];
     } else if (count($found_stack) > 1) {
         $value = $found_stack[0] . $found_stack[count($found_stack)-1];
     }
 
     $answer += $value;
-    echo "Line " . ($i + 1) ." : $line | Value: $value | Answer: $answer" . PHP_EOL;
+    if (count($found_stack) == 1 ) {
+        echo "Line " . ($i + 1) ." : $line | Value: $value | Answer: $answer" . PHP_EOL;
+    }
     unset($found_stack);
 
     // break; // only need first line
