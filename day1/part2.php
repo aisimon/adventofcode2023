@@ -4,7 +4,7 @@ const DIGITS = [
     'one' => '1', 'two' => '2', 'three' => '3', 'four' => '4', 'five' => '5',
     'six' => '6', 'seven' => '7', 'eight' => '8', 'nine' => '9' ];
 
-$lines = file(getcwd() . DIRECTORY_SEPARATOR. 'datafile1.txt');
+$lines = file(getcwd() . DIRECTORY_SEPARATOR. 'datafile.txt');
 
 $answer = 0;
 for ($i = 0; $i < count($lines); $i++) {
@@ -58,6 +58,6 @@ function parser(int $a, int $b, $direction, string &$line) {
     return false;
 }
 
-echo "Answer: $answer " . PHP_EOL; // 53407
+echo "Answer: $answer " . PHP_EOL; // 53407, 44799
 echo "Memory Usage: " . memory_get_peak_usage() . " bytes" . PHP_EOL;
 echo "Processed Lines: $i" . PHP_EOL;
