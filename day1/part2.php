@@ -13,7 +13,7 @@ for ($i = 0; $i < count($lines); $i++) {
     
     // Go from left
     list ($a, $b, $found1) = [0, 1, false];
-    while (($a+$b) < $len) {
+    while (($a+$b) <= $len) {
         if ($found1 = parser($a, $b, 'left', $line)) {
             break;
         }
@@ -30,7 +30,7 @@ for ($i = 0; $i < count($lines); $i++) {
         $b++;
     }
 
-    $line_value = ($found1 == $found2) ? $found1 : $found1 . $found2;
+    $line_value = ($found1 == $found2) ? $found1 . $found1 : $found1 . $found2;
     $answer += $line_value;
     echo "Line " . ($i + 1) ." : $line | Line Value: $line_value | Answer: $answer" . PHP_EOL;
 }
@@ -58,6 +58,6 @@ function parser(int $a, int $b, $direction, string &$line) {
     return false;
 }
 
-echo "Answer: $answer " . PHP_EOL; // 53407, 44799
+echo "Answer: $answer " . PHP_EOL; // 53407, 44799, 52299, 53389
 echo "Memory Usage: " . memory_get_peak_usage() . " bytes" . PHP_EOL;
 echo "Processed Lines: $i" . PHP_EOL;
