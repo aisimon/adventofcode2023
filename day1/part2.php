@@ -58,6 +58,6 @@ function parser(int $a, int $b, $direction, string &$line) {
     return false;
 }
 
-echo "Answer: $answer " . PHP_EOL; // 53407, 44799, 52299, 53389
+echo "Answer: $answer " . PHP_EOL; // 53389
 echo "Memory Usage: " . memory_get_peak_usage() . " bytes" . PHP_EOL;
 echo "Processed Lines: $i" . PHP_EOL;
