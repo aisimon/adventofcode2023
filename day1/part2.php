@@ -1,51 +1,52 @@
 <?php
 
-// This one does not work for case:
-// twone
-// nineight
-
 const DIGITS = [
-    'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5,
-    'six' => 6, 'seven' => 7, 'eight' => 8, 'nine' => 9 ];
+    'one' => '1', 'two' => '2', 'three' => '3', 'four' => '4', 'five' => '5',
+    'six' => '6', 'seven' => '7', 'eight' => '8', 'nine' => '9' ];
 
-$lines = file(getcwd() . DIRECTORY_SEPARATOR. 'datafile2.txt');
+$lines = file(getcwd() . DIRECTORY_SEPARATOR. 'datafile1.txt');
 
 $answer = 0;
 for ($i = 0; $i < count($lines); $i++) {
     $line = rtrim($lines[$i]);
-    list ($a, $b, $value, $cont, $len) = [0, 1, 0, true, strlen($line)];
-
-    while ($cont) {
-        if ($found = parser($a, $b, $line)) {
-            $found_stack[] = $found;
-            list ($a, $b) = [$a+$b, 1];
-        } else {
-            $b++;
+    list ($len, $line_value) = [ strlen($line), 0];
+    
+    // Go from left
+    list ($a, $b, $found1) = [0, 1, false];
+    while (($a+$b) < $len) {
+        if ($found1 = parser($a, $b, 'left', $line)) {
+            break;
         }
-        $cont = (($a+$b) > $len) ? false : true;
+        $b++;
     }
 
-    if (count($found_stack) == 1) {
-        $value = $found_stack[0] . $found_stack[0];
-    } else if (count($found_stack) > 1) {
-        $value = $found_stack[0] . $found_stack[count($found_stack)-1];
+    // Go from right
+    list ($a, $b, $found2) = [$len-1, 1, false];
+    while (($a+$b) <= $len) {
+        if ($found2 = parser($a, $b, 'right', $line)) {
+            break;
+        }
+        $a--;
+        $b++;
     }
 
-    $answer += $value;
-    // if (count($found_stack) == 1) {
-        echo "Line " . ($i + 1) ." : $line | Value: $value | Answer: $answer" . PHP_EOL;
-    // }
-    unset($found_stack);
-
-    // break; // only need first line
+    $line_value = ($found1 == $found2) ? $found1 : $found1 . $found2;
+    $answer += $line_value;
+    echo "Line " . ($i + 1) ." : $line | Line Value: $line_value | Answer: $answer" . PHP_EOL;
 }
 
-function parser(int $a, int $b, string &$line) {
+function parser(int $a, int $b, $direction, string &$line) {
     $check = substr($line, $a, $b);
     
-    if (is_numeric(substr($check, -1))) { // check last char for numeric value
-        return substr($check, -1);
-    } 
+    if ($direction == 'left') {
+        if (is_numeric(substr($check, -1))) { // check last char for numeric value
+            return substr($check, -1);
+        } 
+    } else {
+        if (is_numeric(substr($check, 0, 1))) { // check last char for numeric value
+            return substr($check, 0, 1);
+        } 
+    }
     if (strlen($check) < 3) { // cannot possible match a English number words
         return false;
     }
