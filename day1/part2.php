@@ -1,20 +1,55 @@
 <?php
-define('DS', DIRECTORY_SEPARATOR);
+const DIGITS = [
+    'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5,
+    'six' => 6, 'seven' => 7, 'eight' => 8, 'nine' => 9 ];
 
-$filename = 'datafile.txt';
-$file = file(getcwd() . DS. $filename);
+$lines = file(getcwd() . DIRECTORY_SEPARATOR. 'datafile.txt');
 
-$total = 0;
-foreach ($file as $line) {
-    preg_match('/(\d).*(\d)/', $line, $matches);
-    if (count($matches) == 3) {
-        $digits = (int) $matches[1] . $matches[2];
-    } else {
-        preg_match('/(\d)/', $line, $matches);
-        $digits = (int) !empty($matches) ? $matches[0] . $matches[1] : 0 ;
+$answer = 0;
+for ($i=0; $i<count($lines); $i++) {
+    $line = rtrim($lines[$i]);
+    list ($a, $b, $value, $cont, $len) = [0, 1, 0, true, strlen($line)];
+
+    while ($cont) {
+        if ($found = parser($a, $b, $line)) {
+            $found_stack[] = $found;
+            list ($a, $b) = [$a+$b, 1];
+        } else {
+            $b++;
+        }
+        $cont = (($a+$b) > $len) ? false : true;
     }
 
-    $total += $digits;
+    if (count($found_stack) == 1) {
+        $value = $found_stack[0];
+    } else if (count($found_stack) > 1) {
+        $value = $found_stack[0] + $found_stack[count($found_stack)-1];
+    }
+
+    $answer += $value;
+    echo "Line " . ($i + 1) ." : $line | Value: $value | Answer: $answer" . PHP_EOL;
+    unset($found_stack);
+
+    // break; // only need first line
 }
 
-echo "Total: $total " . PHP_EOL;
+function parser(int $a, int $b, string &$line) {
+    $check = substr($line, $a, $b);
+    
+    if (is_numeric(substr($check, -1))) { // check last char for numeric value
+        return (int) substr($check, -1);
+    } 
+    if (strlen($check) < 3) { // cannot possible match a English number words
+        return false;
+    }
+    foreach (array_keys(DIGITS) as $digit) {
+        if (strpos($check, $digit) !== false) {
+            return DIGITS[$digit];
+        }
+    }
+    return false;
+}
+
+echo "Answer: $answer " . PHP_EOL;
+echo "Memory Usage: " . memory_get_peak_usage() . " bytes" . PHP_EOL;
+echo "Processed Lines: $i" . PHP_EOL;
