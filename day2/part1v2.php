@@ -9,7 +9,7 @@ $bag = [
 
 $lines = file(getcwd() . DIRECTORY_SEPARATOR. 'datafile.txt');
 
-$answer = 0; // 2943 (need bigger!), 480 (too low)
+$answer = 0; // 2943 (need bigger!),
 for ($i = 0; $i < count($lines); $i++) {
     $sections = explode(':', rtrim($lines[$i]));
     $game_num = str_replace('Game ', '', $sections[0]);
@@ -25,11 +25,15 @@ for ($i = 0; $i < count($lines); $i++) {
         }, $balls);
 
         // echo json_encode($balls_new, JSON_PRETTY_PRINT) . PHP_EOL;
-        storeTry($balls_new, $all_trial);
+        // storeTry($balls_new, $all_trial);
+        $good = $good && validateAgainstBag($balls_new, $bag);
+        if (!$good) {
+            break;
+        }
         unset($balls_new);
     }
 
-    $good = validateAgainstBag($all_trial, $bag);
+    // $good = validateAgainstBag($all_trial, $bag);
     echo "Game $game_num: good = " . (int) $good . PHP_EOL;
     $answer += $good ? $game_num : 0;
     // break;
@@ -48,12 +52,12 @@ function validateAgainstBag($balls_new, $bag) {
     return true;
 }
 
-function storeTry($try, &$all_trial) {
-    foreach ($try as $color => $count) {
-        if (!isset($all_trial[$color])) {
-            $all_trial[$color] = $count;
-        } else {
-            $all_trial[$color] += $count;
-        }
-    }
-}
+// function storeTry($try, &$all_trial) {
+//     foreach ($try as $color => $count) {
+//         if (!isset($all_trial[$color])) {
+//             $all_trial[$color] = $count;
+//         } else {
+//             $all_trial[$color] += $count;
+//         }
+//     }
+// }
