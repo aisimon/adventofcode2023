@@ -24,17 +24,16 @@ for ($i = 0; $i < count($lines); $i++) {
             $balls_new[trim($parts[1])] = trim($parts[0]);
         }, $balls);
 
-        echo json_encode($balls_new) . PHP_EOL;
         $good = $good && validateAgainstBag($balls_new, $bag);
         if (!$good) {
+            // echo PHP_EOL . 'Bad. ' . json_encode($balls_new) . PHP_EOL;
             break;
         }
         unset($balls_new);
     }
 
     $answer += $good ? $game_num : 0;
-    echo $lines[$i] . PHP_EOL;
-    echo "Answer $answer. Game $game_num: good = " . (int) $good . PHP_EOL;
+    echo $lines[$i] . "Answer $answer. Game $game_num: good = " . (int) $good . PHP_EOL . PHP_EOL;
     // if ($i == 5) { break; }
 }
 
@@ -42,7 +41,7 @@ function validateAgainstBag($balls_new, $bag) {
     foreach ($balls_new as $color => $count) {
         if (!isset($bag[$color])) {
             return false;
-        } else if ($count > $bag[$color]) {
+        } else if ($count > (int) $bag[$color]) {
             return false;
         }
     }
