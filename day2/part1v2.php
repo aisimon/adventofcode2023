@@ -2,7 +2,7 @@
 
 $bag = ['red' => 12, 'green' => 13, 'blue' => 14];
 $lines = file(getcwd() . DIRECTORY_SEPARATOR. 'datafile.txt');
-// $lines = file(getcwd() . DIRECTORY_SEPARATOR. 'test.txt');
+// $lines = file(getcwd() . DIRECTORY_SEPARATOR. 'test.txt'); // run against example data
 
 // 3035, 66027
 list ($answer1, $answer2) = [0, 0];
@@ -20,17 +20,17 @@ for ($i = 0; $i < count($lines); $i++) {
             $balls_new[trim($parts[1])] = trim($parts[0]);
         }, $balls);
 
-        // oh! && will not work here !
-        $good = $good and validateAgainstBag($balls_new, $bag, $balls_max);
+        // This would not work, validateAgainstBag() should not be short circuited !
+        // $good = $good && validateAgainstBag($balls_new, $bag, $balls_max);
+        $good &= validateAgainstBag($balls_new, $bag, $balls_max);
         unset($balls_new);
     }
 
     $answer1 += $good ? (int) $game_num : 0;
-    $ans2 = array_reduce(array_values($balls_max), "product", 1);
-    $answer2 += $ans2;
+    $answer2 += array_reduce(array_values($balls_max), "product", 1);
 
-    echo "Game $game_num: good = " . (int) $good . ". Answer 1 = $answer1. " .PHP_EOL;
-    echo "Game $game_num: good = " . (int) $good . ". Answer 2 = $answer2. ans2  = $ans2 " .PHP_EOL;
+    echo "Game $game_num: ". (($good)?"Good":"Not Good");
+    echo ". Answer 1 = $answer1 Answer 2 = $answer2" .PHP_EOL;
     unset($balls_max);
 }
 
